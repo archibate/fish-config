@@ -16,6 +16,6 @@ set -U fish_tmux_no_alias true
 
 for x in local atuin cargo npm-global opencode
     if test -d ~/.$x/bin
-        fish_add_path -U ~/.$x/bin/
+        fish_add_path -U ~/.$x/bin
     end
 end
