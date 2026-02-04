@@ -9,3 +9,11 @@ set -l fisher_plugins jethrokuan/z acomagu/fish-async-prompt jorgebucaran/autopa
 for plugin in $fisher_plugins
     fisher install $plugin
 end
+
+set -U fish_tmux_autostart false
+set -U fish_tmux_autoname_session true
+set -U fish_tmux_no_alias true
+set -U pure_reverse_prompt_symbol_in_vimode true
+set -U pure_enable_single_line_prompt true
+set -U pure_separate_prompt_on_error true
+set -U pure_show_system_time false

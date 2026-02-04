@@ -4,10 +4,6 @@ if status is-interactive
         set -x LANG C.UTF-8
     end
 
-    set fish_tmux_autostart false
-    set fish_tmux_autoname_session true
-    set fish_tmux_no_alias true
-
     if command -sq direnv
         direnv hook fish | source
     end
