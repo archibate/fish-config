@@ -19,3 +19,5 @@ for x in local atuin cargo npm-global opencode
         fish_add_path -U ~/.$x/bin
     end
 end
+
+fish_config theme choose 'TokyoNight Moon'
