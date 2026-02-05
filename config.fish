@@ -26,32 +26,33 @@ $(set_color yellow) dP        $(set_color cyan)dP `88888$(set_color blue)P' dP  
 
     fish_vi_key_bindings
     fzf_key_bindings
-    if false; fish_default_key_bindings -M insert; end
-    bind -M insert ctrl-p up-or-search
-    bind -M insert ctrl-n down-or-search
-    bind -M insert ctrl-a beginning-of-line
-    bind -M insert ctrl-e end-of-line
-    bind -M insert home beginning-of-line
-    bind -M insert end end-of-line
-    bind -M insert ctrl-f forward-bigword forward-single-char
-    bind -M insert ctrl-b backward-bigword
-    bind -M visual ctrl-a beginning-of-line
-    bind -M visual ctrl-e end-of-line
-    bind -M visual home beginning-of-line
-    bind -M visual end end-of-line
-    bind -M visual ctrl-f forward-bigword forward-single-char
-    bind -M visual ctrl-b backward-bigword
-    bind -M default ctrl-e end-of-line
-    bind -M default home beginning-of-line
-    bind -M default end end-of-line
-    bind -M default ctrl-f forward-bigword forward-single-char
-    bind -M default ctrl-b backward-bigword
-    bind -M insert ctrl-t transpose-words
-    bind -M insert ctrl-/ undo
-    bind -M insert alt-/ redo
-    bind -M insert alt-u upcase-word
-    bind -M insert alt-c capitalize-word
-    bind -M default ctrl-r redo
+    if false
+        fish_default_key_bindings -M insert
+    else
+        bind -M insert \cp up-or-search
+        bind -M insert \cn down-or-search
+        bind -M insert \ca beginning-of-line
+        bind -M insert \ce end-of-line
+        bind -M insert \e\[H beginning-of-line
+        bind -M insert \e\[F end-of-line
+        bind -M insert \cf forward-bigword forward-single-char
+        bind -M insert \cb backward-bigword
+        bind -M visual \ca beginning-of-line
+        bind -M visual \ce end-of-line
+        bind -M visual \e\[H beginning-of-line
+        bind -M visual \e\[F end-of-line
+        bind -M visual \cf forward-bigword forward-single-char
+        bind -M visual \cb backward-bigword
+        bind -M default \ce end-of-line
+        bind -M default \e\[H beginning-of-line
+        bind -M default \e\[F end-of-line
+        bind -M default \cf forward-bigword forward-single-char
+        bind -M default \cb backward-bigword
+        bind -M insert \ct transpose-words
+        bind -M insert \eu upcase-word
+        bind -M insert \ec capitalize-word
+        bind -M default \cr redo
+    end
 
     source $__fish_config_dir/env.fish
     source $__fish_config_dir/alias.fish
