@@ -1,7 +1,10 @@
 if status is-interactive
 
     if status is-login
-        set -x LANG C.UTF-8
+        if not set -q LANG; and set -q LC_ALL
+            set -x LANG C.UTF-8
+            set -x LC_ALL C.UTF-8
+        end
     end
 
     if command -sq direnv
@@ -25,33 +28,52 @@ $(set_color yellow) dP        $(set_color cyan)dP `88888$(set_color blue)P' dP  
     end
 
     fish_vi_key_bindings
-    fzf_key_bindings
+    if functions -q fzf_key_bindings
+        fzf_key_bindings
+    end
+
     if false
         fish_default_key_bindings -M insert
     else
+
         bind -M insert \cp up-or-search
         bind -M insert \cn down-or-search
         bind -M insert \ca beginning-of-line
         bind -M insert \ce end-of-line
-        bind -M insert \e\[H beginning-of-line
-        bind -M insert \e\[F end-of-line
         bind -M insert \cf forward-bigword forward-single-char
         bind -M insert \cb backward-bigword
         bind -M visual \ca beginning-of-line
         bind -M visual \ce end-of-line
-        bind -M visual \e\[H beginning-of-line
-        bind -M visual \e\[F end-of-line
         bind -M visual \cf forward-bigword forward-single-char
         bind -M visual \cb backward-bigword
         bind -M default \ce end-of-line
-        bind -M default \e\[H beginning-of-line
-        bind -M default \e\[F end-of-line
         bind -M default \cf forward-bigword forward-single-char
         bind -M default \cb backward-bigword
         bind -M insert \ct transpose-words
         bind -M insert \eu upcase-word
         bind -M insert \ec capitalize-word
         bind -M default \cr redo
+
+        for mode in default insert visual
+            if test (string split '.' $FISH_VERSION)[1] -ge 4
+                bind -M $mode home beginning-of-line
+                bind -M $mode end end-of-line
+            else
+                bind -M $mode \e\[H beginning-of-line
+                bind -M $mode \e\[F end-of-line
+            end
+        end
+        if test (string split '.' $FISH_VERSION)[1] -ge 4
+            bind -M default ctrl-/ undo
+            bind -M default alt-/ redo
+            bind -M insert ctrl-/ undo
+            bind -M insert alt-/ redo
+        end
+
+        # if functions -q _fzf_search_directory
+        #     bind -M default \ef _fzf_search_directory
+        #     bind -M insert \ef _fzf_search_directory
+        # end
     end
 
     source $__fish_config_dir/env.fish
