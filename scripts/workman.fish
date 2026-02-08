@@ -15,7 +15,7 @@ function show_help
     echo "  list                       List all git worktrees"
     echo "  add <branch>               Add a new git worktree for branch"
     echo "  enter <branch>             Enter a git worktree in shell"
-    echo "  leave                      Enter project root in shell"
+    echo "  path-of <branch>           Print path of a git worktree"
     echo "  run <branch>               Run a git worktree in docker"
     echo "  remove <branch>            Remove a git worktree for branch"
     echo "  help                       Show this help message"
@@ -73,22 +73,31 @@ function run_worktree --argument-names branch
 end
 
 function list_worktrees
-    set -l project_root (get_project_path)
-
-    git worktree list | begin
-        grep "$project_root/.worktrees/"; or begin
-            echo "✗ No worktree yet" >&2
-            return 1
-        end
-    end | sed 's/.*\[\(.*\)\]$/\1/g'
+    git worktree list --porcelain -z | awk -v RS='\0' '/^branch refs\/heads\// {print substr($0, 19)}'
 end
 
-function leave_worktree
-    set -l project_root (get_project_path)
+function get_worktree_path --argument-names branch
+    git check-ref-format --branch "$branch" >/dev/null || return 1
+    git worktree list --porcelain \
+        | grep  "^branch refs/heads/$branch" >/dev/null \
+        || return 1
+    git worktree list --porcelain \
+        | grep -B2 "^branch refs/heads/$branchName" \
+        | head -1 | cut -d' ' -f 2
+end
 
-    echo "Entering project root: $project_root" >&2
+function path_of_worktree --argument-names branch
+    if test -z "$branch"
+        echo "Error: Branch name required" >&2
+        echo "Usage: $script_name add <branch>" >&2
+        return 1
+    end
 
-    fish -C "cd '$project_root'"
+    get_worktree_path $branch
+    if test $status -ne 0
+        echo "✗ Branch or worktree not found" >&2
+        return 1
+    end
 end
 
 function enter_worktree --argument-names branch
@@ -98,9 +107,11 @@ function enter_worktree --argument-names branch
         return 1
     end
 
-    set -l project_root (get_project_path)
-    set -l project_name (basename $project_root)
-    set -l worktree_path "$project_root/.worktrees/$branch/$project_name"
+    set -l worktree_path (get_worktree_path $branch)
+    if test $status -ne 0
+        echo "✗ Branch or worktree not found" >&2
+        return 1
+    end
 
     echo "Entering worktree for branch: $branch" >&2
 
@@ -173,6 +184,8 @@ function main
     set -l args $argv[2..-1]
 
     switch $command
+        case init
+            init_image
         case build
             build_image
         case list
@@ -183,8 +196,8 @@ function main
             add_worktree $args[1]
         case enter
             enter_worktree $args[1]
-        case leave
-            leave_worktree
+        case path-of
+            path_of_worktree $args[1]
         case remove
             remove_worktree $args[1]
         case help h --help -h
