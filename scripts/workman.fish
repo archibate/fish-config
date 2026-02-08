@@ -32,6 +32,10 @@ function init_image
 
     echo "Creating Dockerfile in $project_root" >&2
     cp $script_path/Dockerfile $project_root/Dockerfile
+
+    echo "Adding .worktrees to .gitignore" >&2
+    mkdir -p $project_root/.worktrees/
+    grep -q '^/.worktrees/$' $project_root/.gitignore 2> /dev/null; or echo /.worktrees/ >> $project_root/.gitignore
 end
 
 function get_project_path
@@ -113,7 +117,7 @@ function enter_worktree --argument-names branch
         return 1
     end
 
-    echo "Entering worktree for branch: $branch" >&2
+    echo "Entering worktree for branch: $branch [$worktree_path]" >&2
 
     fish -C "cd '$worktree_path'"
 end
