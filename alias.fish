@@ -36,6 +36,7 @@ abbr -a gw 'git workspace'
 abbr -a gwa 'git workspace add'
 abbr -a gwl 'git workspace list'
 abbr -a gwrm 'git workspace remove'
+abbr -a g0 'cd (git rev-parse --show-toplevel)'
 
 abbr -a g 'git'
 abbr -a p 'python'

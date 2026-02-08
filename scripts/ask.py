@@ -18,6 +18,7 @@ CONFIG = {
     "baseUrl": "https://open.bigmodel.cn/api/coding/paas/v4/chat/completions",
     "apiKey": "4fd98f3d88734cd18ca3942d4247e808.mYMkyy23h3APIxqu",
     "model": "glm-4.7-flashx",
+    # "model": "glm-4.5-air",
     "temperature": 0.0
 }
 
